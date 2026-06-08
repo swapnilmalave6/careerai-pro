@@ -1,12 +1,14 @@
-# CareerAI Pro Working MVP
+# AstraMind AI Working MVP
 
-This folder contains a working MVP built from the original UI screens.
+This folder contains a working all-in-one AI assistant MVP.
 
 ## What Is Ready
 
 - Node.js backend
 - Login and register
 - Local JSON database: `data/db.json`
+- ChatGPT-style AI chat
+- AI modes for general help, code, study, career, business, content, translation, email and prompts
 - Resume Analyzer
 - Career DNA Generator
 - Job role dropdown

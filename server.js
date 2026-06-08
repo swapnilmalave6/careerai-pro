@@ -7,6 +7,8 @@ const ROOT = __dirname;
 const DB_FILE = path.join(ROOT, "db.json");
 const PORT = Number(process.env.PORT || 3000);
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || "";
+const RAZORPAY_KEY_ID = process.env.RAZORPAY_KEY_ID || "";
+const RAZORPAY_KEY_SECRET = process.env.RAZORPAY_KEY_SECRET || "";
 
 const mime = {
   ".html": "text/html; charset=utf-8",
@@ -148,6 +150,35 @@ function fallbackInterview(role, level) {
   }));
 }
 
+function fallbackChatReply(message) {
+  const text = String(message || "").toLowerCase();
+  if (text.includes("code") || text.includes("javascript") || text.includes("python") || text.includes("html")) {
+    return "I can help with code. Share your goal, current code, and error. I will explain the issue, give a corrected version, and show the steps clearly.";
+  }
+  if (text.includes("translate")) {
+    return "Send the text and target language. I can translate it in a clean, natural style.";
+  }
+  if (text.includes("email")) {
+    return "Tell me the purpose, recipient, tone, and key points. I will draft a clear professional email.";
+  }
+  if (text.includes("business")) {
+    return "Tell me your idea, budget, target customers, and city. I will create a simple business plan with pricing, marketing, and first 7 steps.";
+  }
+  if (text.includes("resume")) {
+    return "Start with a one-page resume. Add a strong summary, skills section, 2-3 projects, education, and measurable impact. Use keywords from the job description.";
+  }
+  if (text.includes("interview")) {
+    return "Prepare 5 stories: your best project, hardest problem, teamwork example, learning example, and why you want the role. Answer with the STAR method.";
+  }
+  if (text.includes("project")) {
+    return "Build one practical project related to your target role. For web roles, create a responsive app with login, API data, database flow, and GitHub README.";
+  }
+  if (text.includes("roadmap") || text.includes("next")) {
+    return "For the next 7 days: polish resume, update LinkedIn, complete one mini project, apply to 20 roles, send 5 referral messages, and practice one mock interview.";
+  }
+  return "I can help with general questions, study, code, writing, translation, emails, prompts, business ideas, and career planning. Tell me what you want to create or solve.";
+}
+
 async function askGemini(prompt) {
   if (!GEMINI_API_KEY) return null;
   const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
@@ -159,6 +190,48 @@ async function askGemini(prompt) {
   if (!response.ok) throw new Error(`Gemini error ${response.status}`);
   const data = await response.json();
   return data.candidates?.[0]?.content?.parts?.[0]?.text || null;
+}
+
+function saveSubscription(db, user, body, status = "demo_success", provider = "Razorpay demo", paymentId = "") {
+  user.plan = body.plan || "Pro";
+  db.payments.push({
+    id: crypto.randomUUID(),
+    userId: user.id,
+    plan: user.plan,
+    amount: body.amount || 0,
+    provider,
+    method: body.paymentMethod || "UPI",
+    mobile: body.mobile || "",
+    couponCode: body.couponCode || "",
+    paymentId,
+    status,
+    createdAt: new Date().toISOString()
+  });
+  db.subscriptions.push({
+    id: crypto.randomUUID(),
+    userId: user.id,
+    plan: user.plan,
+    status: status === "paid_success" ? "active_paid" : "active_demo",
+    createdAt: new Date().toISOString()
+  });
+}
+
+async function createRazorpayOrder(amount, receipt) {
+  const credentials = Buffer.from(`${RAZORPAY_KEY_ID}:${RAZORPAY_KEY_SECRET}`).toString("base64");
+  const response = await fetch("https://api.razorpay.com/v1/orders", {
+    method: "POST",
+    headers: {
+      "Authorization": `Basic ${credentials}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      amount: Number(amount) * 100,
+      currency: "INR",
+      receipt
+    })
+  });
+  if (!response.ok) throw new Error(`Razorpay order failed: ${response.status}`);
+  return response.json();
 }
 
 async function handleApi(req, res) {
@@ -217,21 +290,55 @@ async function handleApi(req, res) {
     return send(res, 200, { questions, aiText: ai });
   }
 
-  if (req.url === "/api/subscribe") {
-    user.plan = body.plan || "Pro";
-    db.payments.push({
-      id: crypto.randomUUID(),
-      userId: user.id,
-      plan: user.plan,
-      amount: body.amount || 0,
-      provider: "Razorpay demo",
-      method: body.paymentMethod || "UPI",
-      mobile: body.mobile || "",
-      couponCode: body.couponCode || "",
-      status: "demo_success",
-      createdAt: new Date().toISOString()
+  if (req.url === "/api/chat") {
+    const message = String(body.message || "");
+    const mode = String(body.mode || "General Assistant");
+    const style = String(body.style || "Simple");
+    const history = Array.isArray(body.history) ? body.history.slice(-8).join("\n") : "";
+    const prompt = `You are AstraMind AI, a helpful all-in-one AI assistant. Mode: ${mode}. Response style: ${style}. Help with general questions, coding, study, content writing, translation, emails, business ideas, prompts and career planning. Give clear, useful answers. Do not mention that you are Gemini. User message: ${message}\nRecent chat:\n${history}`;
+    const ai = await askGemini(prompt).catch(() => null);
+    return send(res, 200, { reply: ai || fallbackChatReply(message) });
+  }
+
+  if (req.url === "/api/create-order") {
+    const amount = Number(body.amount || 0);
+    if (!amount || amount <= 0 || !RAZORPAY_KEY_ID || !RAZORPAY_KEY_SECRET) {
+      saveSubscription(db, user, body);
+      writeDb(db);
+      return send(res, 200, {
+        mode: "demo",
+        user: publicUser(user),
+        message: "Demo payment saved. Add Razorpay keys for live checkout."
+      });
+    }
+
+    const order = await createRazorpayOrder(amount, `careerai_${Date.now()}`);
+    return send(res, 200, {
+      mode: "live",
+      key: RAZORPAY_KEY_ID,
+      order,
+      user: publicUser(user)
     });
-    db.subscriptions.push({ id: crypto.randomUUID(), userId: user.id, plan: user.plan, status: "active_demo", createdAt: new Date().toISOString() });
+  }
+
+  if (req.url === "/api/verify-payment") {
+    if (!RAZORPAY_KEY_SECRET) return send(res, 400, { error: "Razorpay secret not configured" });
+    const expected = crypto
+      .createHmac("sha256", RAZORPAY_KEY_SECRET)
+      .update(`${body.razorpay_order_id}|${body.razorpay_payment_id}`)
+      .digest("hex");
+    if (expected !== body.razorpay_signature) return send(res, 400, { error: "Payment verification failed" });
+
+    saveSubscription(db, user, body, "paid_success", "Razorpay", body.razorpay_payment_id);
+    writeDb(db);
+    return send(res, 200, {
+      user: publicUser(user),
+      message: "Payment successful. Subscription activated."
+    });
+  }
+
+  if (req.url === "/api/subscribe") {
+    saveSubscription(db, user, body);
     writeDb(db);
     return send(res, 200, { user: publicUser(user), message: "Demo payment saved. Add Razorpay keys for live payments." });
   }
@@ -257,6 +364,7 @@ const server = http.createServer((req, res) => {
 
 server.listen(PORT, () => {
   ensureDb();
-  console.log(`CareerAI Pro running at http://localhost:${PORT}`);
+  console.log(`AstraMind AI running at http://localhost:${PORT}`);
   console.log(GEMINI_API_KEY ? "Gemini AI: enabled" : "Gemini AI: fallback mode. Set GEMINI_API_KEY for real AI.");
+  console.log(RAZORPAY_KEY_ID && RAZORPAY_KEY_SECRET ? "Razorpay: live checkout enabled" : "Razorpay: demo mode. Set RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET for live payments.");
 });

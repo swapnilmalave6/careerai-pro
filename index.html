@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="google-site-verification" content="MRs8TPanyGI7zL4EWiqYbQFQsjzxxkDmGgfpP9GX2I4">
-    <title>CareerAI Pro Working MVP</title>
+    <title>AstraMind AI | Smart AI Assistant</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -14,7 +14,7 @@
     <header class="topbar">
       <button class="icon-btn" data-nav="home" title="Home">Home</button>
       <div>
-        <strong>CareerAI Pro</strong>
+        <strong>AstraMind AI</strong>
         <span id="planBadge">Free</span>
       </div>
       <button class="ghost" id="logoutBtn">Logout</button>
@@ -23,19 +23,57 @@
     <main>
       <section class="view active hero" id="home">
         <div class="hero-copy">
-          <p class="eyebrow">AI career tool for freshers and IT professionals</p>
-          <h1>Resume, interview, cover letter and roadmap in one app.</h1>
-          <p>Working MVP ready: login/register, resume analysis, cover letter, interview questions, career plans, payment demo and local database.</p>
+          <p class="eyebrow">Your all-in-one AI assistant for work, study, code and career</p>
+          <h1>Ask anything. Create faster. Learn smarter. Grow daily.</h1>
+          <p>AstraMind AI is a ChatGPT-style assistant with dedicated modes for general questions, coding, study, content writing, translation, business ideas, emails, prompts and career tools.</p>
           <div class="actions">
+            <button class="primary" data-nav="chat">Open AI Chat</button>
             <button class="primary" data-nav="dna">Generate Career DNA</button>
             <button class="primary" data-nav="analyzer">Analyze Resume</button>
             <button class="secondary" data-nav="builder">Build Resume</button>
           </div>
         </div>
         <div class="hero-panel">
-          <div class="metric"><span>ATS Score</span><strong id="heroScore">85</strong></div>
+          <div class="metric"><span>AI Power</span><strong id="heroScore">AI</strong></div>
           <div class="progress"><i style="width:85%"></i></div>
           <p>Use a Gemini API key for live AI results. Without a key, the app runs in smart demo mode.</p>
+        </div>
+      </section>
+
+      <section class="view tool" id="chat">
+        <div class="section-head">
+          <h2>Astra Chat</h2>
+          <p>Choose an AI mode and ask anything. Use it for study, code, writing, translation, planning, business, career and daily work.</p>
+        </div>
+        <div class="grid two">
+          <label>AI Mode<select id="chatMode">
+            <option>General Assistant</option>
+            <option>Code Helper</option>
+            <option>Study Tutor</option>
+            <option>Career Coach</option>
+            <option>Business Ideas</option>
+            <option>Content Writer</option>
+            <option>Translator</option>
+            <option>Email Writer</option>
+            <option>Prompt Engineer</option>
+          </select></label>
+          <label>Response Style<select id="chatStyle">
+            <option>Simple</option>
+            <option>Detailed</option>
+            <option>Step by step</option>
+            <option>Professional</option>
+            <option>Creative</option>
+          </select></label>
+        </div>
+        <div class="chat-box" id="chatBox">
+          <div class="chat-message ai">
+            <strong>AstraMind AI</strong>
+            <p>Hi. Choose a mode and ask me anything. I can help with code, study, writing, translation, business ideas, career planning and more.</p>
+          </div>
+        </div>
+        <div class="chat-input-row">
+          <textarea id="chatInput" rows="3" placeholder="Example: Explain JavaScript promises step by step, or write a professional email, or make a business plan."></textarea>
+          <button class="primary" id="chatSendBtn">Send</button>
         </div>
       </section>
 
@@ -161,7 +199,7 @@
       <section class="view tool" id="plans">
         <div class="section-head">
           <h2>Plans & Payments</h2>
-          <p>Demo payment flow is ready. For live payments, connect a Razorpay account, Key ID, Key Secret and webhook.</p>
+          <p>Choose a plan. If Razorpay keys are configured, live checkout opens. Otherwise the app uses demo mode.</p>
         </div>
         <div class="payment-box">
           <div class="grid three">
@@ -169,7 +207,7 @@
             <label>Mobile Number<input id="paymentMobile" placeholder="9876543210"></label>
             <label>Coupon Code<input id="couponCode" placeholder="Optional"></label>
           </div>
-          <p class="muted">In production, Razorpay checkout will open here. For now, clicking a plan saves a demo subscription.</p>
+          <p class="muted">For live payments, add Razorpay keys in Render environment variables.</p>
         </div>
         <div class="plans">
           <article><h3>Free</h3><b>INR 0</b><p>1 resume analysis</p><button class="secondary" data-plan="Free" data-amount="0">Use Free</button></article>
@@ -191,6 +229,7 @@
 
     <nav class="bottom-nav">
       <button data-nav="home">Home</button>
+      <button data-nav="chat">AI Chat</button>
       <button data-nav="dna">DNA</button>
       <button data-nav="analyzer">Analyze</button>
       <button data-nav="builder">Resume</button>
@@ -199,6 +238,7 @@
       <button data-nav="plans">Plans</button>
     </nav>
 
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script src="/app.js"></script>
   </body>
 </html>

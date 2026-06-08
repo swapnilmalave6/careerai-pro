@@ -244,6 +244,37 @@ $("#printResumeBtn").addEventListener("click", () => {
   window.print();
 });
 
+function addChatMessage(type, text) {
+  const node = document.createElement("div");
+  node.className = `chat-message ${type}`;
+  node.innerHTML = type === "ai"
+    ? `<strong>AstraMind AI</strong><p>${text}</p>`
+    : `<p>${text}</p>`;
+  $("#chatBox").appendChild(node);
+  $("#chatBox").scrollTop = $("#chatBox").scrollHeight;
+}
+
+$("#chatSendBtn").addEventListener("click", async () => {
+  const message = $("#chatInput").value.trim();
+  if (!message) return;
+  $("#chatInput").value = "";
+  addChatMessage("user", message);
+  addChatMessage("ai", "Thinking...");
+  try {
+    const data = await api("/api/chat", {
+      message,
+      mode: $("#chatMode").value,
+      style: $("#chatStyle").value,
+      history: [...document.querySelectorAll(".chat-message")].slice(-8).map(item => item.innerText)
+    });
+    const last = document.querySelector(".chat-message.ai:last-child p");
+    last.textContent = data.reply;
+  } catch (error) {
+    const last = document.querySelector(".chat-message.ai:last-child p");
+    last.textContent = error.message || "Please login and try again.";
+  }
+});
+
 function skillPlan(role, skills) {
   const known = skills.toLowerCase();
   const map = {
@@ -361,15 +392,44 @@ $("#interviewBtn").addEventListener("click", async () => {
 $$("[data-plan]").forEach(button => {
   button.addEventListener("click", async () => {
     try {
-      const data = await api("/api/subscribe", {
+      const payload = {
         plan: button.dataset.plan,
         amount: Number(button.dataset.amount),
         paymentMethod: $("#paymentMethod").value,
         mobile: $("#paymentMobile").value,
         couponCode: $("#couponCode").value
+      };
+      const data = await api("/api/create-order", payload);
+      if (data.mode === "demo") {
+        setUser({ user: data.user });
+        alert(data.message);
+        return;
+      }
+
+      const checkout = new Razorpay({
+        key: data.key,
+        amount: data.order.amount,
+        currency: data.order.currency,
+        name: "AstraMind AI",
+        description: `${payload.plan} Plan`,
+        order_id: data.order.id,
+        prefill: {
+          name: state.user?.name || "",
+          email: state.user?.email || "",
+          contact: payload.mobile || ""
+        },
+        handler: async response => {
+          const verified = await api("/api/verify-payment", {
+            ...payload,
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_signature: response.razorpay_signature
+          });
+          setUser({ user: verified.user });
+          alert(verified.message);
+        }
       });
-      setUser({ user: data.user });
-      alert(data.message);
+      checkout.open();
     } catch (error) {
       showError(error);
     }

@@ -1,7 +1,7 @@
 {
   "name": "careerai-pro",
   "version": "1.0.0",
-  "description": "AI resume analyzer, Career DNA generator, cover letter and interview prep web app.",
+  "description": "AstraMind AI all-in-one assistant with chat, coding, study, writing, career and payment-ready tools.",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
