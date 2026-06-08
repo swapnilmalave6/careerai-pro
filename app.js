@@ -111,7 +111,8 @@ function setupDropdowns() {
 }
 
 function setView(id) {
-  if (!state.token && id !== "auth") id = "auth";
+  const publicViews = ["home", "auth", "roadmap", "plans"];
+  if (!state.token && !publicViews.includes(id)) id = "auth";
   $$(".view").forEach(view => view.classList.toggle("active", view.id === id));
   $$("[data-nav]").forEach(btn => btn.classList.toggle("active", btn.dataset.nav === id));
 }
@@ -377,4 +378,4 @@ $$("[data-plan]").forEach(button => {
 
 setupDropdowns();
 if (state.user) $("#planBadge").textContent = state.user.plan || "Free";
-setView(state.token ? "home" : "auth");
+setView("home");
