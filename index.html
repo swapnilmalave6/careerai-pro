@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CareerAI Pro Working MVP</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <header class="topbar">
+      <button class="icon-btn" data-nav="home" title="Home">Home</button>
+      <div>
+        <strong>CareerAI Pro</strong>
+        <span id="planBadge">Free</span>
+      </div>
+      <button class="ghost" id="logoutBtn">Logout</button>
+    </header>
+
+    <main>
+      <section class="view active hero" id="home">
+        <div class="hero-copy">
+          <p class="eyebrow">AI career tool for freshers and IT professionals</p>
+          <h1>Resume, interview, cover letter and roadmap in one app.</h1>
+          <p>Working MVP ready: login/register, resume analysis, cover letter, interview questions, career plans, payment demo and local database.</p>
+          <div class="actions">
+            <button class="primary" data-nav="dna">Generate Career DNA</button>
+            <button class="primary" data-nav="analyzer">Analyze Resume</button>
+            <button class="secondary" data-nav="builder">Build Resume</button>
+          </div>
+        </div>
+        <div class="hero-panel">
+          <div class="metric"><span>ATS Score</span><strong id="heroScore">85</strong></div>
+          <div class="progress"><i style="width:85%"></i></div>
+          <p>Use a Gemini API key for live AI results. Without a key, the app runs in smart demo mode.</p>
+        </div>
+      </section>
+
+      <section class="view auth-card" id="auth">
+        <h2>Login / Register</h2>
+        <div class="grid two">
+          <label>Name<input id="name" placeholder="Swapnil"></label>
+          <label>Email<input id="email" type="email" placeholder="you@email.com"></label>
+        </div>
+        <label>Password<input id="password" type="password" placeholder="Minimum 6 characters"></label>
+        <div class="actions">
+          <button class="primary" id="registerBtn">Register</button>
+          <button class="secondary" id="loginBtn">Login</button>
+        </div>
+        <p class="muted">Data is saved in the local JSON database: <code>data/db.json</code></p>
+      </section>
+
+      <section class="view tool" id="dna">
+        <div class="section-head">
+          <h2>Career DNA</h2>
+          <p>Unique feature: create a career identity card, 7-day action plan, LinkedIn headline and referral pitch from your education, role, skills and goal.</p>
+        </div>
+        <div class="grid two">
+          <label>Your Name<input id="dnaName" placeholder="Swapnil Patil"></label>
+          <label>Dream Job Role<select id="dnaRole"></select></label>
+        </div>
+        <div class="grid two">
+          <label>Education Stream<select id="dnaEducation"></select></label>
+          <label>Current Level<select id="dnaLevel"><option>Student</option><option>Fresher</option><option>Internship Ready</option><option>Job Ready</option><option>Working Professional</option></select></label>
+        </div>
+        <label>Skills You Know<input id="dnaSkills" placeholder="HTML, CSS, JavaScript, React"></label>
+        <label>Career Goal<input id="dnaGoal" placeholder="Get first job in 60 days"></label>
+        <div class="actions">
+          <button class="primary" id="dnaBtn">Create My Career DNA</button>
+          <button class="secondary" id="copyDnaBtn">Copy Pitch</button>
+        </div>
+        <div class="dna-card" id="dnaOutput"></div>
+      </section>
+
+      <section class="view tool" id="analyzer">
+        <div class="section-head">
+          <h2>AI Resume Analyzer</h2>
+          <p>Select a target job role, paste your resume text and generate an ATS score.</p>
+        </div>
+        <div class="grid two">
+          <label>Target Job Role<select id="jobRole"></select></label>
+          <label>Education Stream<select id="analysisEducation"></select></label>
+        </div>
+        <label>Upload Resume Text<input id="resumeFile" type="file" accept=".txt,.md,.doc,.docx,.pdf"></label>
+        <label>Resume Text<textarea id="resumeText" rows="10" placeholder="Paste your resume text here..."></textarea></label>
+        <button class="primary" id="analyzeBtn">Analyze Resume</button>
+        <div class="result" id="analysisResult"></div>
+      </section>
+
+      <section class="view tool" id="builder">
+        <div class="section-head">
+          <h2>Resume Builder</h2>
+          <p>Select your role and education stream to create an ATS-friendly resume preview.</p>
+        </div>
+        <div class="grid two">
+          <label>Full Name<input id="rbName" placeholder="Swapnil Patil"></label>
+          <label>Job Role<select id="rbRole"></select></label>
+        </div>
+        <div class="grid two">
+          <label>Education Stream<select id="rbEducationStream"></select></label>
+          <label>Education Status<select id="rbEducationStatus"></select></label>
+        </div>
+        <label>College / University<input id="rbCollege" placeholder="College name"></label>
+        <label>Skills<input id="rbSkills" placeholder="React, Node.js, SQL, Git"></label>
+        <label>Projects<textarea id="rbProjects" rows="4" placeholder="Project name - tech stack - result"></textarea></label>
+        <div class="actions">
+          <button class="primary" id="buildResumeBtn">Preview Resume</button>
+          <button class="secondary" id="printResumeBtn">Download PDF</button>
+        </div>
+        <article class="resume-preview" id="resumePreview"></article>
+      </section>
+
+      <section class="view tool" id="cover">
+        <div class="section-head">
+          <h2>Cover Letter Generator</h2>
+          <p>Enter the company and role to generate a tailored cover letter.</p>
+        </div>
+        <div class="grid two">
+          <label>Your Name<input id="clName"></label>
+          <label>Company<input id="clCompany"></label>
+        </div>
+        <div class="grid two">
+          <label>Role<select id="clRole"></select></label>
+          <label>Education Stream<select id="clEducation"></select></label>
+        </div>
+        <label>Skills<input id="clSkills" placeholder="React, API integration, Bootstrap"></label>
+        <button class="primary" id="coverBtn">Generate Cover Letter</button>
+        <pre class="output" id="coverOutput"></pre>
+      </section>
+
+      <section class="view tool" id="interview">
+        <div class="section-head">
+          <h2>Interview Prep</h2>
+          <p>Generate interview questions based on role, education stream and experience level.</p>
+        </div>
+        <div class="grid three">
+          <label>Role<select id="intRole"></select></label>
+          <label>Education<select id="intEducation"></select></label>
+          <label>Level<select id="intLevel"><option>Fresher</option><option>Junior</option><option>Mid-level</option><option>Senior</option></select></label>
+        </div>
+        <button class="primary" id="interviewBtn">Generate Questions</button>
+        <div class="result" id="interviewOutput"></div>
+      </section>
+
+      <section class="view tool" id="roadmap">
+        <div class="section-head">
+          <h2>Job Search Roadmap</h2>
+          <p>A practical job-search launch plan for students and freshers.</p>
+        </div>
+        <div class="timeline">
+          <div><b>Week 1</b><span>Resume + LinkedIn + GitHub polish</span></div>
+          <div><b>Week 2</b><span>20 job applications + 5 referrals daily</span></div>
+          <div><b>Week 3</b><span>Mock interviews + project explanation practice</span></div>
+          <div><b>Week 4</b><span>Follow-ups, portfolio updates, offer negotiation</span></div>
+        </div>
+      </section>
+
+      <section class="view tool" id="plans">
+        <div class="section-head">
+          <h2>Plans & Payments</h2>
+          <p>Demo payment flow is ready. For live payments, connect a Razorpay account, Key ID, Key Secret and webhook.</p>
+        </div>
+        <div class="payment-box">
+          <div class="grid three">
+            <label>Payment Method<select id="paymentMethod"><option>UPI</option><option>Card</option><option>Net Banking</option><option>Wallet</option></select></label>
+            <label>Mobile Number<input id="paymentMobile" placeholder="9876543210"></label>
+            <label>Coupon Code<input id="couponCode" placeholder="Optional"></label>
+          </div>
+          <p class="muted">In production, Razorpay checkout will open here. For now, clicking a plan saves a demo subscription.</p>
+        </div>
+        <div class="plans">
+          <article><h3>Free</h3><b>INR 0</b><p>1 resume analysis</p><button class="secondary" data-plan="Free" data-amount="0">Use Free</button></article>
+          <article><h3>Pro</h3><b>INR 199/mo</b><p>Resume + cover letter + interview prep</p><button class="primary" data-plan="Pro" data-amount="199">Choose Pro</button></article>
+          <article><h3>Premium</h3><b>INR 499/mo</b><p>All tools + priority resume service</p><button class="primary" data-plan="Premium" data-amount="499">Choose Premium</button></article>
+        </div>
+        <div class="result payment-note">
+          <h3>Razorpay live payment checklist</h3>
+          <ul>
+            <li>Create a Razorpay account.</li>
+            <li>Complete business KYC.</li>
+            <li>Add Key ID and Key Secret to the backend environment.</li>
+            <li>Add order creation and payment verification APIs.</li>
+            <li>Add webhooks for payment.captured, subscription.charged and payment.failed.</li>
+          </ul>
+        </div>
+      </section>
+    </main>
+
+    <nav class="bottom-nav">
+      <button data-nav="home">Home</button>
+      <button data-nav="dna">DNA</button>
+      <button data-nav="analyzer">Analyze</button>
+      <button data-nav="builder">Resume</button>
+      <button data-nav="cover">Letter</button>
+      <button data-nav="interview">Interview</button>
+      <button data-nav="plans">Plans</button>
+    </nav>
+
+    <script src="/app.js"></script>
+  </body>
+</html>

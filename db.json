@@ -1,0 +1,126 @@
+{
+  "users": [
+    {
+      "id": "b0f90c40-f0a6-4920-b4d9-db52a1fdf980",
+      "name": "Swapnil",
+      "email": "swapnilmalave6@gmail.com",
+      "plan": "Premium",
+      "createdAt": "2026-06-08T12:58:51.461Z",
+      "passwordHash": "2ca1d9336d80a468bcde4bbb:78a482865de43799c0731ac250ad77041d5d7f09ff362260e999f0cd2971b1d9"
+    }
+  ],
+  "sessions": {
+    "e986eaf13bb8ba4d89303da9d7894b9882d44d2bdd59f705": "b0f90c40-f0a6-4920-b4d9-db52a1fdf980"
+  },
+  "resumes": [
+    {
+      "id": "5e0261d3-cfd8-4759-bff4-110338ba4be1",
+      "userId": "b0f90c40-f0a6-4920-b4d9-db52a1fdf980",
+      "jobRole": "Software Developer",
+      "atsScore": 35,
+      "createdAt": "2026-06-08T12:59:15.180Z",
+      "resumeText": "File selected: Swapnil_Malave Resume networking.pdf\n\nBrowser direct PDF/DOCX extraction is not enabled in this MVP. Please paste resume text here for analysis.",
+      "analysis": {
+        "atsScore": 35,
+        "match": "Needs Work",
+        "missingSkills": [
+          "project",
+          "internship",
+          "javascript",
+          "react",
+          "node",
+          "python"
+        ],
+        "strengths": [],
+        "suggestions": [
+          "Add measurable impact: use numbers like %, rupees saved, users served, or projects completed.",
+          "Tune your summary for Software Developer and include 4-6 exact keywords from the job description.",
+          "Keep one clear Skills section with tools, languages, frameworks, databases, and cloud platforms.",
+          "For every project, write: problem, tech stack, your action, and result."
+        ],
+        "optimizedSummary": "Results-focused Software Developer with hands-on project experience, strong problem-solving skills, and practical knowledge across modern software tools. Ready to contribute to production teams through clean execution, learning speed, and measurable outcomes."
+      }
+    },
+    {
+      "id": "7f53344a-9d15-479c-84a5-a71a86b2ad00",
+      "userId": "b0f90c40-f0a6-4920-b4d9-db52a1fdf980",
+      "jobRole": "networing",
+      "atsScore": 35,
+      "createdAt": "2026-06-08T12:59:47.641Z",
+      "resumeText": "File selected: Swapnil_Malave Resume networking.pdf\n\nBrowser direct PDF/DOCX extraction is not enabled in this MVP. Please paste resume text here for analysis.",
+      "analysis": {
+        "atsScore": 35,
+        "match": "Needs Work",
+        "missingSkills": [
+          "project",
+          "internship",
+          "javascript",
+          "react",
+          "node",
+          "python"
+        ],
+        "strengths": [],
+        "suggestions": [
+          "Add measurable impact: use numbers like %, rupees saved, users served, or projects completed.",
+          "Tune your summary for networing and include 4-6 exact keywords from the job description.",
+          "Keep one clear Skills section with tools, languages, frameworks, databases, and cloud platforms.",
+          "For every project, write: problem, tech stack, your action, and result."
+        ],
+        "optimizedSummary": "Results-focused networing with hands-on project experience, strong problem-solving skills, and practical knowledge across modern software tools. Ready to contribute to production teams through clean execution, learning speed, and measurable outcomes."
+      }
+    }
+  ],
+  "interview_history": [],
+  "payments": [
+    {
+      "id": "03fa4551-6fdc-4d9f-8785-9c3ce94b8335",
+      "userId": "b0f90c40-f0a6-4920-b4d9-db52a1fdf980",
+      "plan": "Pro",
+      "amount": 199,
+      "provider": "Razorpay demo",
+      "status": "demo_success",
+      "createdAt": "2026-06-08T13:01:10.618Z"
+    },
+    {
+      "id": "9f49f9dd-436f-4274-bc18-8f795184b4c3",
+      "userId": "b0f90c40-f0a6-4920-b4d9-db52a1fdf980",
+      "plan": "Pro",
+      "amount": 199,
+      "provider": "Razorpay demo",
+      "status": "demo_success",
+      "createdAt": "2026-06-08T13:01:14.873Z"
+    },
+    {
+      "id": "0580f690-0d85-436d-951f-d02f3423a264",
+      "userId": "b0f90c40-f0a6-4920-b4d9-db52a1fdf980",
+      "plan": "Premium",
+      "amount": 499,
+      "provider": "Razorpay demo",
+      "status": "demo_success",
+      "createdAt": "2026-06-08T13:01:21.695Z"
+    }
+  ],
+  "subscriptions": [
+    {
+      "id": "58240354-84db-4a31-9b96-a2764bff5223",
+      "userId": "b0f90c40-f0a6-4920-b4d9-db52a1fdf980",
+      "plan": "Pro",
+      "status": "active_demo",
+      "createdAt": "2026-06-08T13:01:10.618Z"
+    },
+    {
+      "id": "e98de518-6082-4c8f-9a33-45f50c4a9f1f",
+      "userId": "b0f90c40-f0a6-4920-b4d9-db52a1fdf980",
+      "plan": "Pro",
+      "status": "active_demo",
+      "createdAt": "2026-06-08T13:01:14.873Z"
+    },
+    {
+      "id": "fa4220d8-710b-423c-accb-3faa3f515802",
+      "userId": "b0f90c40-f0a6-4920-b4d9-db52a1fdf980",
+      "plan": "Premium",
+      "status": "active_demo",
+      "createdAt": "2026-06-08T13:01:21.695Z"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "name": "careerai-pro",
+  "version": "1.0.0",
+  "description": "AI resume analyzer, Career DNA generator, cover letter and interview prep web app.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "license": "MIT"
+}
